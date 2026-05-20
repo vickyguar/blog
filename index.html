@@ -1,441 +1,367 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Victoria Guarnieri — CV</title>
-  <link href="https://fonts.googleapis.com/css2?family=Calibri:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --teal-dark:   #134f5c;
-      --teal-mid:    #1a6b7c;
-      --teal-light:  #e8f4f6;
-      --teal-accent: #0d3d47;
-      --white:       #ffffff;
-      --text:        #1a1a1a;
-      --text-muted:  #4a4a4a;
-      --border:      #b2d8df;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi Blog</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Calibri', 'Calibri Regular', sans-serif;
+    background: #f5f5f0;
+    color: #000;
+    padding: 2rem 1rem;
+    font-size: 16px;
+    line-height: 1.6;
+  }
 
-    body {
-      font-family: 'Calibri', Calibri, sans-serif;
-      background: #f0f7f9;
-      color: var(--text);
-      font-size: 15px;
-      line-height: 1.55;
-    }
+  .blog-container {
+    max-width: 780px;
+    margin: 0 auto;
+  }
 
-    /* ── WRAPPER ── */
-    .page {
-      max-width: 860px;
-      margin: 36px auto 60px;
-      background: var(--white);
-      box-shadow: 0 4px 32px rgba(19,79,92,.14);
-    }
+  header {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1.5px solid #bbb;
+  }
 
-    /* ── HEADER ── */
-    header {
-      background: var(--teal-dark);
-      color: var(--white);
-      padding: 44px 52px 36px;
-      position: relative;
-      overflow: hidden;
-    }
-    header::after {
-      content: '';
-      position: absolute;
-      right: -60px; bottom: -60px;
-      width: 220px; height: 220px;
-      border-radius: 50%;
-      background: rgba(255,255,255,.06);
-      pointer-events: none;
-    }
-    header::before {
-      content: '';
-      position: absolute;
-      right: 60px; bottom: -30px;
-      width: 120px; height: 120px;
-      border-radius: 50%;
-      background: rgba(255,255,255,.04);
-      pointer-events: none;
-    }
+  header h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #000;
+  }
 
-    header h1 {
-      font-size: 2.3rem;
-      font-weight: 700;
-      letter-spacing: .5px;
-      margin-bottom: 4px;
-    }
-    header .subtitle {
-      font-size: 1.05rem;
-      font-style: italic;
-      opacity: .88;
-      margin-bottom: 20px;
-    }
+  header p {
+    font-size: 0.95rem;
+    color: #444;
+    margin-top: 0.25rem;
+  }
 
-    .contact-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px 28px;
-      font-size: .88rem;
-      opacity: .92;
-    }
-    .contact-bar a {
-      color: var(--white);
-      text-decoration: none;
-      border-bottom: 1px solid rgba(255,255,255,.4);
-      transition: border-color .2s;
-    }
-    .contact-bar a:hover { border-color: var(--white); }
-    .contact-bar span { opacity: .7; }
+  /* ── TAG FILTER BAR ── */
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 2rem;
+    align-items: center;
+  }
 
-    /* ── BODY LAYOUT ── */
-    .body {
-      display: grid;
-      grid-template-columns: 1fr;
-    }
+  .filter-label {
+    font-size: 0.8rem;
+    color: #555;
+    margin-right: 4px;
+  }
 
-    /* ── SECTION ── */
-    section {
-      padding: 30px 52px;
-      border-bottom: 1px solid var(--border);
-    }
-    section:last-child { border-bottom: none; }
+  .filter-tag {
+    cursor: pointer;
+    font-family: 'Calibri', sans-serif;
+    font-size: 0.75rem;
+    padding: 3px 10px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    transition: opacity 0.15s;
+    color: #000;
+  }
 
-    .section-title {
-      font-size: .72rem;
-      font-weight: 700;
-      letter-spacing: 2.2px;
-      text-transform: uppercase;
-      color: var(--teal-dark);
-      margin-bottom: 18px;
-      padding-bottom: 8px;
-      border-bottom: 2px solid var(--teal-dark);
-    }
+  .filter-tag.active { font-weight: bold; }
+  .filter-tag:hover { opacity: 0.75; }
 
-    /* ── ENTRY ── */
-    .entry { margin-bottom: 22px; }
-    .entry:last-child { margin-bottom: 0; }
+  /* ── POST CARD ── */
+  .post {
+    border-radius: 6px;
+    border: 1.5px solid transparent;
+    padding: 1.25rem 1.4rem;
+    margin-bottom: 1.5rem;
+  }
 
-    .entry-header {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      margin-bottom: 2px;
-    }
-    .entry-title-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      width: 100%;
-      gap: 16px;
-    }
-    .entry-title {
-      font-weight: 700;
-      font-size: 1rem;
-      color: var(--teal-accent);
-    }
-    .entry-date {
-      font-size: .84rem;
-      color: var(--text-muted);
-      white-space: nowrap;
-    }
-    .entry-sub {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: 16px;
-      font-style: italic;
-      font-size: .93rem;
-      color: var(--text-muted);
-      margin-bottom: 4px;
-    }
-    .entry-sub strong { font-style: normal; font-weight: 700; color: var(--text); }
-    .entry-location {
-      white-space: nowrap;
-      font-style: italic;
-      flex-shrink: 0;
-    }
+  .post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
 
-    ul.bullets {
-      padding-left: 18px;
-      margin-top: 6px;
-    }
-    ul.bullets li {
-      margin-bottom: 3px;
-      font-size: .94rem;
-      color: var(--text);
-    }
+  .post-title-block { flex: 1; }
 
-    /* ── PILLS (cursos/idioma) ── */
-    .pill-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 6px;
-    }
-    .pill {
-      background: var(--teal-light);
-      color: var(--teal-dark);
-      border: 1px solid var(--border);
-      padding: 3px 12px;
-      border-radius: 20px;
-      font-size: .83rem;
-      font-weight: 700;
-    }
+  .post-title {
+    font-size: 1.15rem;
+    font-weight: bold;
+    color: #000;
+  }
 
-    /* ── PRESENTATIONS ── */
-    .pres { margin-bottom: 14px; }
-    .pres:last-child { margin-bottom: 0; }
-    .pres-title { font-weight: 700; font-size: .95rem; color: var(--teal-accent); }
-    .pres-meta { font-style: italic; font-size: .88rem; color: var(--text-muted); }
-    .pres-authors { font-size: .88rem; color: var(--text-muted); margin-top: 1px; }
+  .post-date {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: #333;
+    margin-top: 2px;
+  }
 
-    /* ── INLINE TAG (En curso) ── */
-    .tag {
-      display: inline-block;
-      background: var(--teal-dark);
-      color: var(--white);
-      font-size: .72rem;
-      padding: 1px 8px;
-      border-radius: 3px;
-      vertical-align: middle;
-      margin-left: 6px;
-      font-weight: 700;
-      letter-spacing: .5px;
-    }
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: flex-end;
+    flex-shrink: 0;
+  }
 
-    /* ── FOOTER ── */
-    footer {
-      text-align: center;
-      padding: 14px;
-      font-size: .78rem;
-      color: var(--text-muted);
-      background: var(--teal-light);
-    }
+  .tag {
+    font-family: 'Calibri', sans-serif;
+    font-size: 0.72rem;
+    padding: 2px 9px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    color: #000;
+    white-space: nowrap;
+  }
 
-    @media (max-width: 640px) {
-      header, section { padding-left: 24px; padding-right: 24px; }
-      header h1 { font-size: 1.7rem; }
-      .entry-title-row { flex-direction: column; gap: 2px; }
-    }
+  .post-body {
+    font-size: 0.97rem;
+    color: #000;
+    margin-top: 0.75rem;
+  }
 
-    @media print {
-      body { background: white; }
-      .page { box-shadow: none; margin: 0; }
-    }
-  </style>
+  /* ── COMMENTS ── */
+  .comments {
+    margin-top: 1rem;
+    border-top: 1px solid rgba(0,0,0,0.12);
+  }
+
+  .comment {
+    background: #fff;
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+    margin-top: 0.75rem;
+    border: 1px solid rgba(0,0,0,0.10);
+  }
+
+  .comment-meta {
+    font-size: 0.78rem;
+    color: #555;
+    margin-bottom: 4px;
+  }
+
+  .comment-author { font-weight: bold; color: #000; }
+  .comment-date   { font-style: italic; }
+
+  .comment-body {
+    font-size: 0.93rem;
+    color: #000;
+  }
+
+  /* ── GOOGLE PALETTE CLARO 3 / OSCURO 2 ── */
+  .color-red     { background: #f4cccc; border-color: #cc0000; }
+  .color-orange  { background: #fce5cd; border-color: #e69138; }
+  .color-yellow  { background: #fff2cc; border-color: #f1c232; }
+  .color-green   { background: #d9ead3; border-color: #38761d; }
+  .color-cyan    { background: #d0e0e3; border-color: #134f5c; }
+  .color-lblue   { background: #cfe2f3; border-color: #1155cc; }
+  .color-blue    { background: #c9daf8; border-color: #1c4587; }
+  .color-purple  { background: #d9d2e9; border-color: #20124d; }
+  .color-magenta { background: #ead1dc; border-color: #4c1130; }
+  .color-gray    { background: #efefef; border-color: #666;    }
+
+  .tag-red     { background: #f4cccc; border-color: #cc0000; }
+  .tag-orange  { background: #fce5cd; border-color: #e69138; }
+  .tag-yellow  { background: #fff2cc; border-color: #f1c232; }
+  .tag-green   { background: #d9ead3; border-color: #38761d; }
+  .tag-cyan    { background: #d0e0e3; border-color: #134f5c; }
+  .tag-lblue   { background: #cfe2f3; border-color: #1155cc; }
+  .tag-blue    { background: #c9daf8; border-color: #1c4587; }
+  .tag-purple  { background: #d9d2e9; border-color: #20124d; }
+  .tag-magenta { background: #ead1dc; border-color: #4c1130; }
+  .tag-gray    { background: #efefef; border-color: #666;    }
+
+  .filter-tag-red     { background: #f4cccc; border-color: #cc0000; }
+  .filter-tag-orange  { background: #fce5cd; border-color: #e69138; }
+  .filter-tag-yellow  { background: #fff2cc; border-color: #f1c232; }
+  .filter-tag-green   { background: #d9ead3; border-color: #38761d; }
+  .filter-tag-cyan    { background: #d0e0e3; border-color: #134f5c; }
+  .filter-tag-lblue   { background: #cfe2f3; border-color: #1155cc; }
+  .filter-tag-blue    { background: #c9daf8; border-color: #1c4587; }
+  .filter-tag-purple  { background: #d9d2e9; border-color: #20124d; }
+  .filter-tag-magenta { background: #ead1dc; border-color: #4c1130; }
+  .filter-tag-gray    { background: #efefef; border-color: #666;    }
+</style>
 </head>
 <body>
 
-<div class="page">
+<div class="blog-container">
 
-  <!-- HEADER -->
   <header>
-    <h1>Victoria Guarnieri</h1>
-    <p class="subtitle">Ingeniera Biomédica</p>
-    <div class="contact-bar">
-      <span>Buenos Aires, Argentina</span>
-      <a href="mailto:vickyguarnieri1@gmail.com">vickyguarnieri1@gmail.com</a>
-      <a href="https://linkedin.com/in/victoria-guarnieri-/" target="_blank">linkedin.com/in/victoria-guarnieri-/</a>
-      <a href="https://github.com/vickyguar" target="_blank">github.com/vickyguar</a>
-      <span>DNI: 43660111</span>
-      <span>Nacimiento: 18/09/2001</span>
-    </div>
+    <h1>Mi Blog</h1>
+    <p>Hablo de cualquier cosa.</p>
   </header>
 
-  <div class="body">
+  <div class="filter-bar" id="filterBar"></div>
 
-    <!-- FORMACIÓN -->
-    <section>
-      <h2 class="section-title">Formación Académica</h2>
-      <div class="entry">
-        <div class="entry-header"><div class="entry-title-row"><span class="entry-title">Ingeniería Biomédica</span>
-          <span class="entry-date">Mar 2020 – Dic 2025</span></div>
+  <div id="postsContainer"></div>
+
+</div>
+
+<script>
+const COLORS = ["yellow","green","lblue","blue","purple","cyan","red","orange","magenta","gray"];
+const TAG_COLORS = {};
+let colorIdx = 0;
+
+function getTagColor(tag) {
+  const key = tag.toLowerCase().trim();
+  if (!TAG_COLORS[key]) {
+    TAG_COLORS[key] = COLORS[colorIdx % COLORS.length];
+    colorIdx++;
+  }
+  return TAG_COLORS[key];
+}
+
+function fmtDate(d) {
+  return new Date(d).toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+/* ══════════════════════════════════════════
+   POSTS — editá este array para agregar entradas
+   Campos: id, title, date, body, tags[], color, comments[]
+   Comentarios: { author, date, body }
+   Colores disponibles: red, orange, yellow, green, cyan, lblue, blue, purple, magenta, gray
+══════════════════════════════════════════ */
+const posts = [
+  {
+    id: 1,
+    title: "Ideas estocásticas",
+    date: "2026-05-20T10:00:00",
+    body: `Hay patrones de conducta. Hay patrones de consumo. Hay hábitos.
+    Un patrón también es un modelo que sirve de muestra para sacar otra cosa igual.
+    Hay patrones hermosos en la matemática, en las secuencias, en la geometría, en la simetría.
+    Hay patrones mucho más obvios: en los tejidos, en el arte, los mosaicos, las mandalas. En la arquitectura, el diseño, el lenguaje, la rima.
+    Podemos encontrar formas en la madera, el marmol, las piedras, las nubes y en garabatos.
+    Hay patrones en la música, que son rítmicos, melódicos, armónicos. El cerebro detecta regularidades. La repetición crea expectativa; la variación controlada produce interés.
+    Las ilusiones ópticas funcionan.
+
+    El sentido común es un patrón.
+
+    En fin, la cosa es: evolucionamos porque encontramos patrones, somos una maquina encontradora de patrones en todos lados. Por eso, el ser humano es tan malo para tomar muestras aleatorias: los patrones son todo lo contrario a la aleatoriedad.
+    Y bueno, aleatorio no es lo mismo que al azar.`,
+    image: "fotos/patron_racing.jpg",
+    tags: ["estadística"],
+    color: "yellow",
+    comments: [
+      // { author: "Victoria", date: "2026-05-20T10:00:00", body: "PD: hablo de cualquier cosa." }
+    ]
+  },
+//   {
+//     id: 2,
+//     title: "Primeros pasos con pandas y numpy",
+//     date: "2025-03-18T14:30:00",
+//     body: "Hoy estuve explorando datasets de clima con pandas. Lo más útil fue aprender a usar groupby y apply para resumir datos meteorológicos por estación. Les comparto el flujo básico que usé...",
+//     tags: ["ciencia de datos", "python"],
+//     color: "lblue",
+//     comments: []
+//   },
+//   {
+//     id: 3,
+//     title: "Vacaciones en la Patagonia",
+//     date: "2025-04-02T08:00:00",
+//     body: "Estuvimos una semana recorriendo la Patagonia. El Nahuel Huapi fue una locura, el agua de un azul increíble. Hicimos trekking en el Cerro López y el Refugio Lynch. Imposible no desconectarse.",
+//     tags: ["vacaciones", "viajes"],
+//     color: "green",
+//     comments: [
+//       { author: "Martín", date: "2025-04-05T17:00:00", body: "¡Qué envidia! ¿Qué sendero recomendás más?" },
+//       { author: "Yo",     date: "2025-04-05T19:00:00", body: "El del Cerro López es imperdible, aunque es bastante exigente. ¡Vale la pena cada paso!" }
+//     ]
+//   },
+//   {
+//     id: 4,
+//     title: "Redes neuronales desde cero",
+//     date: "2025-05-01T11:00:00",
+//     body: "Implementé una red neuronal simple con numpy puro, sin usar PyTorch ni TensorFlow. El objetivo era entender el backpropagation desde adentro. La parte más interesante fue entender cómo fluyen los gradientes.",
+//     tags: ["machine learning", "python"],
+//     color: "purple",
+//     comments: []
+//   }
+];
+/* ══════════════════════════════════════════ */
+
+let activeFilter = "todos";
+
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function renderFilterBar() {
+  const bar = document.getElementById("filterBar");
+  const allTags = new Set();
+  posts.forEach(p => p.tags.forEach(t => allTags.add(t.toLowerCase().trim())));
+
+  let html = `<span class="filter-label">Filtrar:</span>
+    <span class="filter-tag ${activeFilter==='todos'?'active':''}"
+      style="background:#eee;border:1px solid #aaa;"
+      onclick="filterPosts('todos')">Todos</span>`;
+
+  allTags.forEach(tag => {
+    const c = getTagColor(tag);
+    html += `<span class="filter-tag filter-tag-${c} ${activeFilter===tag?'active':''}"
+      onclick="filterPosts('${escHtml(tag)}')">${escHtml(tag)}</span>`;
+  });
+
+  bar.innerHTML = html;
+}
+
+function renderPosts() {
+  const container = document.getElementById("postsContainer");
+  const filtered = activeFilter === "todos"
+    ? posts
+    : posts.filter(p => p.tags.map(t => t.toLowerCase().trim()).includes(activeFilter));
+
+  if (filtered.length === 0) {
+    container.innerHTML = `<p style="color:#666;font-style:italic">No hay entradas con ese tag.</p>`;
+    return;
+  }
+
+  container.innerHTML = filtered.slice().reverse().map(post => {
+    const tagsHtml = post.tags.map(t => {
+      const c = getTagColor(t);
+      return `<span class="tag tag-${c}">${escHtml(t)}</span>`;
+    }).join("");
+
+    const commentsHtml = post.comments.length
+      ? `<div class="comments">${post.comments.map(c => `
+          <div class="comment">
+            <div class="comment-meta">
+              <span class="comment-author">${escHtml(c.author)}</span>
+              <span class="comment-date"> · ${fmtDate(c.date)}</span>
+            </div>
+            <div class="comment-body">${escHtml(c.body)}</div>
+          </div>`).join("")}
+        </div>`
+      : "";
+
+    return `
+    <div class="post color-${post.color}" id="post-${post.id}">
+      <div class="post-header">
+        <div class="post-title-block">
+          <div class="post-title">${escHtml(post.title)}</div>
+          <div class="post-date">${fmtDate(post.date)}</div>
         </div>
-        <p class="entry-sub"><span><em>Facultad de Ingeniería y Ciencias Exactas y Naturales, Universidad Favaloro</em></span><span class="entry-location">Buenos Aires, Argentina</span></p>
-        <ul class="bullets">
-          <li>Proyecto final: <em>"Gestión de Datos en Investigación Oncológica: Desarrollo de Software Integral para Ensayos In Vivo"</em>, desarrollado para el Instituto de Investigaciones Biomédicas de la Universidad Católica Argentina (UCA). Implementado y en funcionamiento.</li>
-          <li>Promedio: <strong>8,36/10</strong>.</li>
-          <li>Reconocimiento: <strong>Segunda Escolta de Bandera Nacional</strong>, asociado al rendimiento académico.</li>
-          <li>Herramientas principales: C/C++, C#, Git, GitHub, MATLAB, SQL y Python.</li>
-        </ul>
+        <div class="post-tags">${tagsHtml}</div>
       </div>
-    </section>
+      <div class="post-body">${escHtml(post.body).replace(/\n/g, '<br>')}</div>
+      ${post.image ? `<img src="${post.image}" style="margin-top:1rem; max-width:100%; border-radius:4px;">` : ""}
+      ${commentsHtml}
+    </div>`;
+  }).join("");
+}
 
-    <!-- EXPERIENCIA LABORAL -->
-    <section>
-      <h2 class="section-title">Experiencia Laboral</h2>
+function filterPosts(tag) {
+  activeFilter = tag;
+  renderFilterBar();
+  renderPosts();
+}
 
-      <div class="entry">
-        <div class="entry-header"><div class="entry-title-row"><span class="entry-title">Advanced Data Science Associate</span>
-          <span class="entry-date">May 2026 – Presente</span></div>
-        </div>
-        <p class="entry-sub"><span><strong>ZS Associates Argentina</strong></span><span class="entry-location">Buenos Aires, Argentina</span></p>
-      </div>
-
-      <div class="entry">
-        <div class="entry-header"><div class="entry-title-row"><span class="entry-title">Trainee en IA</span>
-          <span class="entry-date">Sep 2024 – May 2026</span></div>
-        </div>
-        <p class="entry-sub"><span><strong>Hospital Italiano de Buenos Aires</strong></span><span class="entry-location">Buenos Aires, Argentina</span></p>
-        <p style="font-size:.9rem; margin-bottom:4px; color:var(--text-muted);">Programa de Inteligencia Artificial y Ciencia de Datos, Área de Investigación e Innovación.</p>
-        <ul class="bullets">
-          <li>Desarrollé y evalué un modelo de <strong>Deep Learning</strong> para clasificación de imágenes clínicas con <strong>PyTorch</strong> y <strong>scikit-learn</strong>.</li>
-          <li>Realicé exploración, limpieza y preprocesamiento de datos con <strong>Pandas, NumPy, Matplotlib</strong> y <strong>Seaborn</strong>.</li>
-          <li>Participé de un estudio de nivel de acuerdo interobservador usando <strong>R</strong>, para validar etiquetas de la base de datos.</li>
-          <li>Entrené modelos en <strong>AWS</strong> (SageMaker, S3) y realicé seguimientos con <strong>Weights &amp; Biases (W&amp;B)</strong>.</li>
-          <li>Desarrollé y desplegué una <strong>API</strong> con <strong>FastAPI</strong> y <strong>Docker</strong>; gestioné el control de versiones con <strong>Git</strong> y <strong>Bitbucket</strong>.</li>
-        </ul>
-      </div>
-
-      <div class="entry">
-        <div class="entry-header"><div class="entry-title-row"><span class="entry-title">Rotante en Ingeniería Biomédica</span>
-          <span class="entry-date">May 2024 – Sep 2024</span></div>
-        </div>
-        <p class="entry-sub"><span><strong>Hospital Universitario Fundación Favaloro</strong></span><span class="entry-location">Buenos Aires, Argentina</span></p>
-        <p style="font-size:.9rem; margin-bottom:4px; color:var(--text-muted);">Prácticas Profesionales Supervisadas en el Laboratorio de Bioingeniería.</p>
-        <ul class="bullets">
-          <li>Analicé datos históricos de mantenimiento preventivo y correctivo para identificar patrones de falla y actualizar protocolos.</li>
-          <li>Realicé mantenimiento preventivo y correctivo de equipamiento médico, incluyendo controles de seguridad eléctrica, ensayos funcionales con testers biomédicos, diagnóstico técnico y reparación a nivel placa y componentes electrónicos.</li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- EXPERIENCIA DOCENTE -->
-    <section>
-      <h2 class="section-title">Experiencia Docente</h2>
-
-      <div class="entry">
-        <div class="entry-header"><div class="entry-title-row"><span class="entry-title">Jefa de Trabajos Prácticos</span>
-          <span class="entry-date">Dic 2025 – Presente</span></div>
-        </div>
-        <p class="entry-sub"><span><strong>Facultad de Ingeniería y Ciencias Exactas y Naturales, Universidad Favaloro</strong> — Departamento de Matemática</span><span class="entry-location">Buenos Aires, Argentina</span></p>
-        <ul class="bullets">
-          <li>Asignatura: <em>Cálculo 3</em> (cálculo en variable compleja).</li>
-        </ul>
-      </div>
-
-      <div class="entry">
-        <div class="entry-header"><div class="entry-title-row"><span class="entry-title">Ayudante Alumna</span>
-          <span class="entry-date">Ago 2021 – Dic 2025</span></div>
-        </div>
-        <p class="entry-sub"><span><strong>Facultad de Ingeniería y Ciencias Exactas y Naturales, Universidad Favaloro</strong> — Departamentos de Matemática e Informática</span><span class="entry-location">Buenos Aires, Argentina</span></p>
-        <ul class="bullets">
-          <li>Asignaturas: <em>Cálculo 1</em> (cálculo en variable real), <em>Cálculo 2</em> (cálculo en varias variables), <em>Cálculo 3</em> y <em>Base de Datos</em> (bases de datos relacionales con SQL).</li>
-        </ul>
-      </div>
-
-      <div class="entry">
-        <div class="entry-header"><div class="entry-title-row"><span class="entry-title">Ayudante</span>
-          <span class="entry-date">Mar 2026 – Jun 2026</span></div>
-        </div>
-        <p class="entry-sub"><span><strong>Hospital Italiano de Buenos Aires</strong> — Maestría en Informática en Salud y Curso de Posgrado</span><span class="entry-location">Remoto</span></p>
-        <ul class="bullets">
-          <li>Asignatura de maestría: <em>Inteligencia Artificial II</em>.</li>
-          <li>Curso de posgrado: <em>Evaluación de proyectos de IA en Salud</em>.</li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- CURSOS Y CERTIFICACIONES -->
-    <section>
-      <h2 class="section-title">Cursos y Certificaciones</h2>
-
-      <div class="entry">
-        <div class="entry-header"><div class="entry-title-row"><span class="entry-title">Deep Learning e Inteligencia Artificial en Biología <span class="tag">En curso</span></span>
-          <span class="entry-date">En curso</span></div>
-        </div>
-        <p class="entry-sub"><span><em>Facultad de Ciencias Exactas y Naturales, UBA</em> — 120 hs</span><span class="entry-location">Remoto</span></p>
-      </div>
-
-      <div class="entry">
-        <div class="entry-header"><div class="entry-title-row"><span class="entry-title">Minicurso de Estadística Bayesiana</span>
-          <span class="entry-date">Oct 2025</span></div>
-        </div>
-        <p class="entry-sub"><span><em>XXIX Reunión Científica del Grupo Argentino de Bioestadística</em></span><span class="entry-location">Corrientes, Argentina</span></p>
-      </div>
-
-      <div class="entry">
-        <div class="entry-header"><div class="entry-title-row"><span class="entry-title">Deep Learning: Redes neuronales desde cero</span>
-          <span class="entry-date">Jul 2023</span></div>
-        </div>
-        <p class="entry-sub"><span><em>Centro de e-Learning UTN FRBA</em> — 37 hs — <strong>Nota: Excelente</strong></span><span class="entry-location">Remoto</span></p>
-      </div>
-
-      <div class="entry">
-        <div class="entry-header"><div class="entry-title-row"><span class="entry-title">Introducción al aprendizaje automático no supervisado</span>
-          <span class="entry-date">May 2023</span></div>
-        </div>
-        <p class="entry-sub"><span><em>Facultad de Ingeniería y Ciencias Exactas y Naturales, Universidad Favaloro</em> — 16 hs</span><span class="entry-location">Buenos Aires, Argentina</span></p>
-      </div>
-
-      <div class="entry">
-        <div class="entry-header"><div class="entry-title-row"><span class="entry-title">Curso de Machine Learning con Python</span>
-          <span class="entry-date">May 2023</span></div>
-        </div>
-        <p class="entry-sub"><span><em>Centro de e-Learning UTN FRBA</em> — 60 hs — <strong>Nota: Sobresaliente</strong></span><span class="entry-location">Remoto</span></p>
-      </div>
-
-      <div class="entry">
-        <div class="entry-header"><div class="entry-title-row"><span class="entry-title">Introducción a Python orientado a algoritmos y programación competitiva</span>
-          <span class="entry-date">Nov 2020</span></div>
-        </div>
-        <p class="entry-sub"><span><em>IEEE Universidad Favaloro, IEEE Women In Engineering y LambdaClass</em> — 20 hs</span><span class="entry-location">Remoto</span></p>
-      </div>
-
-      <div class="entry">
-        <div class="entry-header"><div class="entry-title-row"><span class="entry-title">Integrante de Organización SABI Estudiantil</span>
-          <span class="entry-date">Oct 2025</span></div>
-        </div>
-        <p class="entry-sub"><span><em>XXV Congreso Argentino de Bioingeniería</em></span><span class="entry-location">Mar del Plata, Argentina</span></p>
-      </div>
-    </section>
-
-    <!-- PRESENTACIONES -->
-    <section>
-      <h2 class="section-title">Presentaciones</h2>
-
-      <div class="pres">
-        <p class="pres-title">Estudio de Acuerdo Interobservador en la valoración de imágenes de lesiones por presión</p>
-        <p class="pres-meta"><em>Jornadas de Informática en Salud JIS Summit — Hospital Italiano de Buenos Aires</em> &mdash; Nov 2025 &mdash; Presentación oral (remoto)</p>
-        <p class="pres-authors">Rusconi Lagarrigue A.B., Sguiglia S., Guarnieri V.</p>
-      </div>
-
-      <div class="pres">
-        <p class="pres-title">Inteligencia Artificial en la Práctica Médica</p>
-        <p class="pres-meta"><em>Jornada de actualización sobre patología vulvar SIAVV</em> &mdash; Buenos Aires, Oct 2025 &mdash; Presentación oral</p>
-        <p class="pres-authors">Guarnieri V., Caridi J.</p>
-      </div>
-
-      <div class="pres">
-        <p class="pres-title">Determinación de grado de acuerdo para variables categóricas</p>
-        <p class="pres-meta"><em>XXIX Reunión Científica del Grupo Argentino de Bioestadística</em> &mdash; Corrientes, Oct 2025 &mdash; Póster</p>
-        <p class="pres-authors">Rusconi Lagarrigue A.B., Sguiglia S., Guarnieri V., et al.</p>
-      </div>
-
-      <div class="pres">
-        <p class="pres-title">Determinación de grado de acuerdo en segmentación de imágenes médicas</p>
-        <p class="pres-meta"><em>XXIX Reunión Científica del Grupo Argentino de Bioestadística</em> &mdash; Corrientes, Oct 2025 &mdash; Póster</p>
-        <p class="pres-authors">Sguiglia S., Rusconi Lagarrigue A.B., Guarnieri V., et al.</p>
-      </div>
-    </section>
-
-    <!-- IDIOMA -->
-    <section>
-      <h2 class="section-title">Idioma</h2>
-      <div class="pill-row">
-        <span class="pill">Inglés — Avanzado</span>
-      </div>
-    </section>
-
-  </div><!-- /body -->
-
-  <footer>Última actualización: 19/05/2026</footer>
-
-</div><!-- /page -->
-
+renderFilterBar();
+renderPosts();
+</script>
 </body>
 </html>
