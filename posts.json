@@ -51,11 +51,6 @@
         "author": "Yo",
         "date": "2025-04-05T19:00:00",
         "body": "El del Cerro López es imperdible, aunque es bastante exigente. ¡Vale la pena cada paso!"
-      },
-      {
-        "author": "Victoria",
-        "body": "Agrego un comentario",
-        "date": "2026-05-21T15:00:17.246Z"
       }
     ]
   },
@@ -70,6 +65,18 @@
     ],
     "color": "purple",
     "image": null,
+    "comments": []
+  },
+  {
+    "id": 1779375790274,
+    "title": "Agrego un nuevo posteo",
+    "body": "Me gusta la matemática\n\n$f(x) = 2x + 3$",
+    "date": "2026-05-21T15:03:10.274Z",
+    "tags": [
+      "matemática"
+    ],
+    "color": "red",
+    "image": "fotos/1779375787417_069276b6-fcdd-49f8-836e-f805a85560f3.jpg",
     "comments": []
   }
 ]
