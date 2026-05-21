@@ -9,6 +9,12 @@
     ],
     "color": "yellow",
     "image": null,
-    "comments": []
+    "comments": [
+      {
+        "author": "Victoria",
+        "body": "Si salio bien!! Ahora pruebo con un comentario",
+        "date": "2026-05-21T22:48:29.402Z"
+      }
+    ]
   }
 ]
