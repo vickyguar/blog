@@ -237,6 +237,9 @@
   }
 
   .post-body { font-size: 0.97rem; color: #000; margin-top: 0.75rem; }
+  .post-body code { font-family: Consolas, 'Courier New', monospace; background: #f4f4f4; padding: 0.15em 0.3em; border-radius: 3px; }
+  .post-body pre { margin: 1rem 0; padding: 1rem; background: #f4f4f4; border-radius: 8px; overflow-x: auto; }
+  .post-body pre code { display: block; white-space: pre; }
 
   .post-image {
     margin-top: 1rem;
@@ -400,8 +403,8 @@
       <input type="text" id="npTitle" placeholder="Título de la entrada">
 
       <label>Contenido</label>
-      <textarea id="npBody" placeholder="Escribí tu entrada acá... Podés usar LaTeX: $f(x)=x^2$ o $$\int_0^1 x\,dx$$"></textarea>
-      <p class="form-hint">Saltos de línea se respetan. LaTeX inline con $...$ y en bloque con $$...$$</p>
+      <textarea id="npBody" placeholder="Escribí tu entrada acá... Podés usar LaTeX, markdown y bloques de código"></textarea>
+      <p class="form-hint">Saltos de línea se respetan. Usá **negrita**, *cursiva*, `monoespacio` y bloques de código con ```python ... ```.</p>
 
       <label>Imagen (opcional)</label>
       <input type="file" id="npImage" accept="image/*">
@@ -707,21 +710,54 @@ function escHtml(str) {
 
 // Renderiza body: primero escapa HTML, luego restaura $...$ para MathJax
 function renderBody(text) {
-  // Separar bloques LaTeX para no escaparlos
-  const parts = [];
   let remaining = text;
-  // Reemplazar $$...$$ y $...$ con placeholders
+
+  // Primero extraer bloques de código ```lang ... ``` y `inline code`
+  const codeBlocks = [];
+  remaining = remaining.replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, content) => {
+    codeBlocks.push({ lang, content });
+    return `\x00CODEBLOCK${codeBlocks.length-1}\x00`;
+  });
+  const inlineCodes = [];
+  remaining = remaining.replace(/`([^`\n]+?)`/g, (_, content) => {
+    inlineCodes.push(content);
+    return `\x00CODEINLINE${inlineCodes.length-1}\x00`;
+  });
+
+  // Extraer LaTeX para no procesar su contenido
   const latexBlocks = [];
   remaining = remaining.replace(/\$\$([\s\S]+?)\$\$/g, (m) => {
-    latexBlocks.push(m); return `\x00LATEX${latexBlocks.length-1}\x00`;
+    latexBlocks.push(m);
+    return `\x00LATEX${latexBlocks.length-1}\x00`;
   });
   remaining = remaining.replace(/\$([^\$\n]+?)\$/g, (m) => {
-    latexBlocks.push(m); return `\x00LATEX${latexBlocks.length-1}\x00`;
+    latexBlocks.push(m);
+    return `\x00LATEX${latexBlocks.length-1}\x00`;
   });
-  // Escapar HTML y convertir saltos
+
+  // Escapar HTML y convertir saltos de línea
   let html = escHtml(remaining).replace(/\n/g, '<br>');
+
+  // Aplicar markdown básico a lo que no es código ni LaTeX
+  html = html
+    .replace(/\*\*([\s\S]+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/__([\s\S]+?)__/g, '<strong>$1</strong>')
+    .replace(/\*([\s\S]+?)\*/g, '<em>$1</em>')
+    .replace(/_([\s\S]+?)_/g, '<em>$1</em>');
+
+  // Restaurar bloques de código
+  html = html.replace(/\x00CODEBLOCK(\d+)\x00/g, (_, i) => {
+    const { lang, content } = codeBlocks[+i];
+    const langClass = lang ? ` class="language-${escHtml(lang)}"` : '';
+    return `<pre><code${langClass}>${escHtml(content)}</code></pre>`;
+  });
+  html = html.replace(/\x00CODEINLINE(\d+)\x00/g, (_, i) => {
+    return `<code>${escHtml(inlineCodes[+i])}</code>`;
+  });
+
   // Restaurar LaTeX sin escapar
   html = html.replace(/\x00LATEX(\d+)\x00/g, (_, i) => latexBlocks[+i]);
+
   return html;
 }
 
