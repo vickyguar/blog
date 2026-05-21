@@ -1,20 +1,2 @@
 [
-  {
-    "id": 1779403615438,
-    "title": "Primer posteo",
-    "body": "Hola! Este es mi primer posteo. Estoy haciendo algunas pruebas a ver si todo funciona.\n\n**Esto debería estar en negrita.**\n\n*Esto en cursiva.*\n\n`Esto es monoespacio`\n\n```python\nprint(\"Esto es un bloque de código\")\n```\n\nLo siguiente es latex inline: $f(x)=2x+1$\n\nY lo otro es un bloque de latex:\n\n$$\nF(\\omega) = \\int_{-\\infty}^{\\infty}f(t) \\cdot e^{-j\\omega t} dt\n$$\n\nEspero que salga todo bien!!!",
-    "date": "2026-05-21T22:46:55.438Z",
-    "tags": [
-      "general"
-    ],
-    "color": "yellow",
-    "image": null,
-    "comments": [
-      {
-        "author": "Victoria",
-        "body": "Si salio bien!! Ahora pruebo con un comentario",
-        "date": "2026-05-21T22:48:29.402Z"
-      }
-    ]
-  }
 ]
