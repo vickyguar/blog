@@ -1,0 +1,47 @@
+[
+  {
+    "id": 1,
+    "title": "Bienvenido a mi blog",
+    "date": "2025-03-10T10:00:00",
+    "body": "Este es el primer post de mi blog. Voy a escribir sobre ciencia de datos, machine learning, mis viajes y el día a día. Espero que sea un espacio donde pueda compartir ideas y aprendizajes.",
+    "tags": ["general"],
+    "color": "yellow",
+    "image": null,
+    "comments": [
+      { "author": "Ana", "date": "2025-03-11T09:00:00", "body": "¡Qué buena iniciativa! Ya me suscribo." }
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Primeros pasos con pandas y numpy",
+    "date": "2025-03-18T14:30:00",
+    "body": "Hoy estuve explorando datasets de clima con pandas. Lo más útil fue aprender a usar groupby y apply para resumir datos meteorológicos por estación. Les comparto el flujo básico que usé...",
+    "tags": ["ciencia de datos", "python"],
+    "color": "lblue",
+    "image": null,
+    "comments": []
+  },
+  {
+    "id": 3,
+    "title": "Vacaciones en la Patagonia",
+    "date": "2025-04-02T08:00:00",
+    "body": "Estuvimos una semana recorriendo la Patagonia. El Nahuel Huapi fue una locura, el agua de un azul increíble. Hicimos trekking en el Cerro López y el Refugio Lynch. Imposible no desconectarse.",
+    "tags": ["vacaciones", "viajes"],
+    "color": "green",
+    "image": null,
+    "comments": [
+      { "author": "Martín", "date": "2025-04-05T17:00:00", "body": "¡Qué envidia! ¿Qué sendero recomendás más?" },
+      { "author": "Yo",     "date": "2025-04-05T19:00:00", "body": "El del Cerro López es imperdible, aunque es bastante exigente. ¡Vale la pena cada paso!" }
+    ]
+  },
+  {
+    "id": 4,
+    "title": "Redes neuronales desde cero",
+    "date": "2025-05-01T11:00:00",
+    "body": "Implementé una red neuronal simple con numpy puro, sin usar PyTorch ni TensorFlow. El objetivo era entender el backpropagation desde adentro. La parte más interesante fue entender cómo fluyen los gradientes.",
+    "tags": ["machine learning", "python"],
+    "color": "purple",
+    "image": null,
+    "comments": []
+  }
+]

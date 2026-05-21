@@ -4,6 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mi Blog</title>
+
+<!-- MathJax para LaTeX -->
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'], ['\\(','\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] },
+    startup: { typeset: false }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -16,30 +26,89 @@
     line-height: 1.6;
   }
 
-  .blog-container {
-    max-width: 780px;
-    margin: 0 auto;
-  }
+  .blog-container { max-width: 780px; margin: 0 auto; }
 
+  /* ── HEADER ── */
   header {
     margin-bottom: 2.5rem;
     padding-bottom: 1rem;
     border-bottom: 1.5px solid #bbb;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
   }
 
-  header h1 {
-    font-size: 2rem;
-    font-weight: bold;
+  header h1 { font-size: 2rem; font-weight: bold; color: #000; }
+  header p  { font-size: 0.95rem; color: #444; margin-top: 0.25rem; }
+
+  /* ── ADMIN LOCK ICON ── */
+  #adminToggle {
+    font-size: 1.2rem;
+    cursor: pointer;
+    opacity: 0.35;
+    user-select: none;
+    transition: opacity 0.2s;
+    padding: 4px;
+  }
+  #adminToggle:hover { opacity: 0.7; }
+  #adminToggle.unlocked { opacity: 1; }
+
+  /* ── TOKEN MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.35);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: #fff;
+    border-radius: 8px;
+    padding: 1.8rem 2rem;
+    max-width: 420px;
+    width: 90%;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+  }
+
+  .modal h2 { font-size: 1.1rem; margin-bottom: 0.75rem; }
+  .modal p  { font-size: 0.85rem; color: #555; margin-bottom: 1rem; line-height: 1.5; }
+
+  .modal input[type="password"] {
+    width: 100%;
+    font-family: 'Calibri', sans-serif;
+    font-size: 0.95rem;
+    padding: 7px 10px;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+    margin-bottom: 0.75rem;
+  }
+
+  .modal-btns { display: flex; gap: 8px; justify-content: flex-end; }
+
+  .btn {
+    font-family: 'Calibri', sans-serif;
+    font-size: 0.88rem;
+    padding: 5px 16px;
+    border-radius: 4px;
+    border: 1.5px solid #888;
+    background: transparent;
+    cursor: pointer;
     color: #000;
   }
+  .btn:hover { background: #f0f0f0; }
+  .btn-primary { border-color: #333; font-weight: bold; }
 
-  header p {
-    font-size: 0.95rem;
-    color: #444;
-    margin-top: 0.25rem;
+  .modal-error {
+    font-size: 0.8rem;
+    color: #cc0000;
+    margin-bottom: 0.5rem;
+    min-height: 1rem;
   }
 
-  /* ── TAG FILTER BAR ── */
+  /* ── FILTER BAR ── */
   .filter-bar {
     display: flex;
     flex-wrap: wrap;
@@ -48,11 +117,7 @@
     align-items: center;
   }
 
-  .filter-label {
-    font-size: 0.8rem;
-    color: #555;
-    margin-right: 4px;
-  }
+  .filter-label { font-size: 0.8rem; color: #555; margin-right: 4px; }
 
   .filter-tag {
     cursor: pointer;
@@ -64,9 +129,73 @@
     transition: opacity 0.15s;
     color: #000;
   }
-
   .filter-tag.active { font-weight: bold; }
-  .filter-tag:hover { opacity: 0.75; }
+  .filter-tag:hover  { opacity: 0.75; }
+
+  /* ── NEW POST PANEL (admin only) ── */
+  #adminPanel { margin-bottom: 2rem; }
+
+  .new-post-toggle {
+    font-family: 'Calibri', sans-serif;
+    font-size: 0.9rem;
+    padding: 6px 18px;
+    border-radius: 5px;
+    border: 1.5px solid #888;
+    background: #fff;
+    cursor: pointer;
+    color: #000;
+  }
+  .new-post-toggle:hover { background: #eee; }
+
+  .new-post-form {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 1rem;
+    background: #fff;
+    border: 1.5px solid #ccc;
+    border-radius: 6px;
+    padding: 1.2rem;
+  }
+  .new-post-form.open { display: flex; }
+
+  .new-post-form label { font-size: 0.85rem; font-weight: bold; color: #000; }
+
+  .new-post-form input[type="text"],
+  .new-post-form textarea,
+  .new-post-form select {
+    font-family: 'Calibri', sans-serif;
+    font-size: 0.95rem;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+    padding: 6px 10px;
+    color: #000;
+    background: #fafafa;
+  }
+  .new-post-form textarea { min-height: 110px; resize: vertical; }
+
+  .form-hint { font-size: 0.78rem; color: #666; margin-top: -6px; }
+
+  .new-post-form button[type="submit"] {
+    font-family: 'Calibri', sans-serif;
+    font-size: 0.9rem;
+    align-self: flex-start;
+    padding: 6px 20px;
+    border-radius: 5px;
+    border: 1.5px solid #555;
+    background: transparent;
+    cursor: pointer;
+    color: #000;
+    font-weight: bold;
+  }
+  .new-post-form button[type="submit"]:hover { background: #eee; }
+
+  .saving-msg {
+    font-size: 0.85rem;
+    font-style: italic;
+    color: #555;
+    display: none;
+  }
 
   /* ── POST CARD ── */
   .post {
@@ -74,6 +203,7 @@
     border: 1.5px solid transparent;
     padding: 1.25rem 1.4rem;
     margin-bottom: 1.5rem;
+    position: relative;
   }
 
   .post-header {
@@ -85,19 +215,8 @@
   }
 
   .post-title-block { flex: 1; }
-
-  .post-title {
-    font-size: 1.15rem;
-    font-weight: bold;
-    color: #000;
-  }
-
-  .post-date {
-    font-style: italic;
-    font-size: 0.85rem;
-    color: #333;
-    margin-top: 2px;
-  }
+  .post-title { font-size: 1.15rem; font-weight: bold; color: #000; }
+  .post-date  { font-style: italic; font-size: 0.85rem; color: #333; margin-top: 2px; }
 
   .post-tags {
     display: flex;
@@ -117,17 +236,17 @@
     white-space: nowrap;
   }
 
-  .post-body {
-    font-size: 0.97rem;
-    color: #000;
-    margin-top: 0.75rem;
+  .post-body { font-size: 0.97rem; color: #000; margin-top: 0.75rem; }
+
+  .post-image {
+    margin-top: 1rem;
+    max-width: 100%;
+    border-radius: 4px;
+    display: block;
   }
 
   /* ── COMMENTS ── */
-  .comments {
-    margin-top: 1rem;
-    border-top: 1px solid rgba(0,0,0,0.12);
-  }
+  .comments { margin-top: 1rem; border-top: 1px solid rgba(0,0,0,0.12); }
 
   .comment {
     background: #fff;
@@ -137,21 +256,82 @@
     border: 1px solid rgba(0,0,0,0.10);
   }
 
-  .comment-meta {
-    font-size: 0.78rem;
-    color: #555;
-    margin-bottom: 4px;
-  }
-
+  .comment-meta { font-size: 0.78rem; color: #555; margin-bottom: 4px; }
   .comment-author { font-weight: bold; color: #000; }
   .comment-date   { font-style: italic; }
+  .comment-body   { font-size: 0.93rem; color: #000; }
 
-  .comment-body {
-    font-size: 0.93rem;
+  /* admin: add-comment form inside post */
+  .add-comment-form {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 0.85rem;
+    padding-top: 0.75rem;
+    border-top: 1px dashed rgba(0,0,0,0.15);
+  }
+  .add-comment-form.open { display: flex; }
+
+  .add-comment-form input,
+  .add-comment-form textarea {
+    font-family: 'Calibri', sans-serif;
+    font-size: 0.9rem;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+    padding: 5px 9px;
+    color: #000;
+    background: #fff;
+  }
+  .add-comment-form textarea { resize: vertical; min-height: 56px; }
+
+  .add-comment-form button {
+    font-family: 'Calibri', sans-serif;
+    font-size: 0.83rem;
+    align-self: flex-start;
+    padding: 4px 14px;
+    border-radius: 4px;
+    border: 1px solid rgba(0,0,0,0.3);
+    background: transparent;
+    cursor: pointer;
     color: #000;
   }
+  .add-comment-form button:hover { background: rgba(0,0,0,0.06); }
 
-  /* ── GOOGLE PALETTE CLARO 3 / OSCURO 2 ── */
+  .admin-post-actions {
+    display: none;
+    font-size: 0.78rem;
+    color: #666;
+    margin-top: 0.6rem;
+    gap: 10px;
+  }
+  .admin-post-actions.visible { display: flex; }
+
+  .admin-post-actions span {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  .admin-post-actions span:hover { color: #000; }
+
+  /* ── STATUS BAR ── */
+  #statusBar {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: #fff;
+    font-family: 'Calibri', sans-serif;
+    font-size: 0.88rem;
+    padding: 8px 20px;
+    border-radius: 20px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    z-index: 200;
+  }
+  #statusBar.show { opacity: 1; }
+
+  /* ── PALETTE ── */
   .color-red     { background: #f4cccc; border-color: #cc0000; }
   .color-orange  { background: #fce5cd; border-color: #e69138; }
   .color-yellow  { background: #fff2cc; border-color: #f1c232; }
@@ -188,101 +368,336 @@
 </head>
 <body>
 
+<!-- TOKEN MODAL -->
+<div class="modal-overlay" id="tokenModal">
+  <div class="modal">
+    <h2>Acceso de administración</h2>
+    <p>Ingresá tu GitHub Personal Access Token para poder publicar entradas. El token se guarda solo en este navegador y nunca sale de tu dispositivo hacia ningún servidor externo.</p>
+    <input type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+    <div class="modal-error" id="tokenError"></div>
+    <div class="modal-btns">
+      <button class="btn" onclick="closeTokenModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveToken()">Guardar</button>
+    </div>
+  </div>
+</div>
+
 <div class="blog-container">
 
   <header>
-    <h1>Mi Blog</h1>
-    <p>Hablo de cualquier cosa.</p>
+    <div>
+      <h1>Mi Blog</h1>
+      <p>Ciencia de datos, machine learning, vida cotidiana y lo que se me cruce.</p>
+    </div>
+    <span id="adminToggle" title="Administración" onclick="handleAdminClick()">🔒</span>
   </header>
 
+  <!-- ADMIN PANEL (oculto por defecto) -->
+  <div id="adminPanel" style="display:none">
+    <button class="new-post-toggle" onclick="toggleNewPostForm()">+ Nueva entrada</button>
+    <div class="new-post-form" id="newPostForm">
+      <label>Título</label>
+      <input type="text" id="npTitle" placeholder="Título de la entrada">
+
+      <label>Contenido</label>
+      <textarea id="npBody" placeholder="Escribí tu entrada acá... Podés usar LaTeX: $f(x)=x^2$ o $$\int_0^1 x\,dx$$"></textarea>
+      <p class="form-hint">Saltos de línea se respetan. LaTeX inline con $...$ y en bloque con $$...$$</p>
+
+      <label>Imagen (opcional)</label>
+      <input type="file" id="npImage" accept="image/*">
+      <p class="form-hint">La imagen se sube al repositorio en la carpeta <code>fotos/</code>.</p>
+
+      <label>Tags (separados por coma)</label>
+      <input type="text" id="npTags" placeholder="ej: ciencia de datos, machine learning">
+
+      <label>Color de la tarjeta</label>
+      <select id="npColor">
+        <option value="yellow">Amarillo</option>
+        <option value="green">Verde</option>
+        <option value="lblue">Azul claro</option>
+        <option value="blue">Azul</option>
+        <option value="purple">Púrpura</option>
+        <option value="cyan">Cian</option>
+        <option value="red">Rojo</option>
+        <option value="orange">Naranja</option>
+        <option value="magenta">Magenta</option>
+        <option value="gray">Gris</option>
+      </select>
+
+      <div style="display:flex;align-items:center;gap:12px">
+        <button type="submit" onclick="publishPost()">Publicar entrada</button>
+        <span class="saving-msg" id="savingMsg">Guardando en GitHub...</span>
+      </div>
+    </div>
+  </div>
+
   <div class="filter-bar" id="filterBar"></div>
-
   <div id="postsContainer"></div>
-
 </div>
 
+<div id="statusBar"></div>
+
 <script>
-const COLORS = ["yellow","green","lblue","blue","purple","cyan","red","orange","magenta","gray"];
+/* ══════════════════════════════════════════════
+   CONFIG
+══════════════════════════════════════════════ */
+const GITHUB_USER = 'vickyguar';
+const GITHUB_REPO = 'blog';
+const POSTS_FILE  = 'posts.json';
+const PHOTOS_DIR  = 'fotos';
+const API_BASE    = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents`;
+
+/* ══════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════ */
+let posts        = [];
+let isAdmin      = false;
+let activeFilter = 'todos';
+
+const COLORS = ['yellow','green','lblue','blue','purple','cyan','red','orange','magenta','gray'];
 const TAG_COLORS = {};
 let colorIdx = 0;
 
+/* ══════════════════════════════════════════════
+   TOKEN MANAGEMENT
+   Token se guarda en localStorage — solo en el
+   navegador del usuario, nunca se envía a ningún
+   sitio salvo api.github.com con HTTPS.
+══════════════════════════════════════════════ */
+function getToken()      { return localStorage.getItem('gh_blog_token') || ''; }
+function clearToken()    { localStorage.removeItem('gh_blog_token'); }
+function storeToken(t)   { localStorage.setItem('gh_blog_token', t.trim()); }
+
+function handleAdminClick() {
+  if (isAdmin) {
+    // ya autenticada → logout
+    clearToken();
+    setAdminMode(false);
+    showStatus('Sesión cerrada.');
+  } else {
+    openTokenModal();
+  }
+}
+
+function openTokenModal() {
+  document.getElementById('tokenError').textContent = '';
+  document.getElementById('tokenInput').value = '';
+  document.getElementById('tokenModal').classList.add('open');
+  setTimeout(() => document.getElementById('tokenInput').focus(), 100);
+}
+
+function closeTokenModal() {
+  document.getElementById('tokenModal').classList.remove('open');
+}
+
+async function saveToken() {
+  const t = document.getElementById('tokenInput').value.trim();
+  if (!t) { document.getElementById('tokenError').textContent = 'Ingresá un token.'; return; }
+
+  // Verificar que el token es válido y pertenece al repo correcto
+  document.getElementById('tokenError').textContent = 'Verificando...';
+  try {
+    const res = await fetch(`${API_BASE}/${POSTS_FILE}`, {
+      headers: { Authorization: `token ${t}`, Accept: 'application/vnd.github+json' }
+    });
+    if (res.status === 401 || res.status === 403) {
+      document.getElementById('tokenError').textContent = 'Token inválido o sin permisos.';
+      return;
+    }
+    if (!res.ok) {
+      document.getElementById('tokenError').textContent = `Error ${res.status}. Revisá el token.`;
+      return;
+    }
+    // Token OK
+    storeToken(t);
+    closeTokenModal();
+    setAdminMode(true);
+    showStatus('✓ Modo administración activado.');
+  } catch(e) {
+    document.getElementById('tokenError').textContent = 'No se pudo conectar con GitHub.';
+  }
+}
+
+function setAdminMode(on) {
+  isAdmin = on;
+  document.getElementById('adminToggle').textContent  = on ? '🔓' : '🔒';
+  document.getElementById('adminToggle').classList.toggle('unlocked', on);
+  document.getElementById('adminPanel').style.display = on ? 'block' : 'none';
+  renderPosts(); // re-render para mostrar/ocultar controles de admin
+}
+
+/* ══════════════════════════════════════════════
+   GITHUB API HELPERS
+══════════════════════════════════════════════ */
+async function ghGet(path) {
+  const res = await fetch(`${API_BASE}/${path}`, {
+    headers: { Authorization: `token ${getToken()}`, Accept: 'application/vnd.github+json' }
+  });
+  if (!res.ok) throw new Error(`GitHub GET error ${res.status}`);
+  return res.json();
+}
+
+async function ghPut(path, content_b64, message, sha) {
+  const body = { message, content: content_b64 };
+  if (sha) body.sha = sha;
+  const res = await fetch(`${API_BASE}/${path}`, {
+    method: 'PUT',
+    headers: {
+      Authorization: `token ${getToken()}`,
+      Accept: 'application/vnd.github+json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || `GitHub PUT error ${res.status}`);
+  }
+  return res.json();
+}
+
+async function savePosts(newPosts, commitMsg) {
+  // Obtener SHA actual del archivo
+  const current = await ghGet(POSTS_FILE);
+  const sha     = current.sha;
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(newPosts, null, 2))));
+  await ghPut(POSTS_FILE, content, commitMsg, sha);
+}
+
+async function uploadImage(filename, dataUrl) {
+  // dataUrl: "data:image/jpeg;base64,XXXXXX"
+  const b64 = dataUrl.split(',')[1];
+  let sha;
+  try {
+    const existing = await ghGet(`${PHOTOS_DIR}/${filename}`);
+    sha = existing.sha;
+  } catch(_) { /* archivo nuevo, sin sha */ }
+  await ghPut(`${PHOTOS_DIR}/${filename}`, b64, `Imagen: ${filename}`, sha);
+  return `${PHOTOS_DIR}/${filename}`;
+}
+
+/* ══════════════════════════════════════════════
+   LOAD POSTS (público, sin token)
+══════════════════════════════════════════════ */
+async function loadPosts() {
+  try {
+    // cache-bust para que no sirva versión vieja
+    const res = await fetch(`${POSTS_FILE}?t=${Date.now()}`);
+    if (!res.ok) throw new Error();
+    posts = await res.json();
+  } catch(_) {
+    posts = [];
+  }
+  renderAll();
+}
+
+/* ══════════════════════════════════════════════
+   PUBLISH POST
+══════════════════════════════════════════════ */
+function toggleNewPostForm() {
+  document.getElementById('newPostForm').classList.toggle('open');
+}
+
+async function publishPost() {
+  const title   = document.getElementById('npTitle').value.trim();
+  const body    = document.getElementById('npBody').value.trim();
+  const tagsRaw = document.getElementById('npTags').value.trim();
+  const color   = document.getElementById('npColor').value;
+  const imgFile = document.getElementById('npImage').files[0];
+
+  if (!title || !body) { showStatus('El título y el contenido son obligatorios.', true); return; }
+
+  const tags = tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : ['general'];
+
+  setSaving(true);
+
+  try {
+    let imagePath = null;
+
+    // Subir imagen si hay
+    if (imgFile) {
+      const dataUrl = await readFileAsDataUrl(imgFile);
+      const safeName = `${Date.now()}_${imgFile.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
+      imagePath = await uploadImage(safeName, dataUrl);
+    }
+
+    const newPost = {
+      id: Date.now(),
+      title,
+      body,
+      date: new Date().toISOString(),
+      tags,
+      color,
+      image: imagePath,
+      comments: []
+    };
+
+    const newPosts = [...posts, newPost];
+    await savePosts(newPosts, `Nueva entrada: ${title}`);
+
+    posts = newPosts;
+
+    // Limpiar form
+    document.getElementById('npTitle').value = '';
+    document.getElementById('npBody').value  = '';
+    document.getElementById('npTags').value  = '';
+    document.getElementById('npImage').value = '';
+    document.getElementById('newPostForm').classList.remove('open');
+
+    activeFilter = 'todos';
+    renderAll();
+    showStatus('✓ Entrada publicada y guardada en GitHub.');
+  } catch(e) {
+    showStatus('Error al guardar: ' + e.message, true);
+  } finally {
+    setSaving(false);
+  }
+}
+
+/* ══════════════════════════════════════════════
+   ADD COMMENT (admin)
+══════════════════════════════════════════════ */
+function toggleCommentForm(postId) {
+  document.getElementById(`cf-${postId}`).classList.toggle('open');
+}
+
+async function submitComment(postId) {
+  const author = document.getElementById(`ca-${postId}`).value.trim();
+  const body   = document.getElementById(`cb-${postId}`).value.trim();
+  if (!author || !body) { showStatus('Completá nombre y comentario.', true); return; }
+
+  setSaving(true);
+  try {
+    const newPosts = posts.map(p => {
+      if (p.id !== postId) return p;
+      return { ...p, comments: [...p.comments, { author, body, date: new Date().toISOString() }] };
+    });
+    await savePosts(newPosts, `Comentario en: ${posts.find(p=>p.id===postId)?.title}`);
+    posts = newPosts;
+    document.getElementById(`ca-${postId}`).value = '';
+    document.getElementById(`cb-${postId}`).value = '';
+    document.getElementById(`cf-${postId}`).classList.remove('open');
+    renderAll();
+    showStatus('✓ Comentario guardado.');
+  } catch(e) {
+    showStatus('Error al guardar: ' + e.message, true);
+  } finally {
+    setSaving(false);
+  }
+}
+
+/* ══════════════════════════════════════════════
+   RENDER
+══════════════════════════════════════════════ */
 function getTagColor(tag) {
   const key = tag.toLowerCase().trim();
-  if (!TAG_COLORS[key]) {
-    TAG_COLORS[key] = COLORS[colorIdx % COLORS.length];
-    colorIdx++;
-  }
+  if (!TAG_COLORS[key]) { TAG_COLORS[key] = COLORS[colorIdx++ % COLORS.length]; }
   return TAG_COLORS[key];
 }
 
 function fmtDate(d) {
-  return new Date(d).toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric' });
+  return new Date(d).toLocaleDateString('es-AR', { year:'numeric', month:'long', day:'numeric' });
 }
-
-/* ══════════════════════════════════════════
-   POSTS — editá este array para agregar entradas
-   Campos: id, title, date, body, tags[], color, comments[]
-   Comentarios: { author, date, body }
-   Colores disponibles: red, orange, yellow, green, cyan, lblue, blue, purple, magenta, gray
-══════════════════════════════════════════ */
-const posts = [
-  {
-    id: 1,
-    title: "Ideas estocásticas",
-    date: "2026-05-20T10:00:00",
-    body: `Hay patrones de conducta. Hay patrones de consumo. Hay hábitos.
-    Un patrón también es un modelo que sirve de muestra para sacar otra cosa igual.
-    Hay patrones hermosos en la matemática, en las secuencias, en la geometría, en la simetría.
-    Hay patrones mucho más obvios: en los tejidos, en el arte, los mosaicos, las mandalas. En la arquitectura, el diseño, el lenguaje, la rima.
-    Podemos encontrar formas en la madera, el marmol, las piedras, las nubes y en garabatos.
-    Hay patrones en la música, que son rítmicos, melódicos, armónicos. El cerebro detecta regularidades. La repetición crea expectativa; la variación controlada produce interés.
-    Las ilusiones ópticas funcionan.
-
-    El sentido común es un patrón.
-
-    En fin, la cosa es: evolucionamos porque encontramos patrones, somos una maquina encontradora de patrones en todos lados. Por eso, el ser humano es tan malo para tomar muestras aleatorias: los patrones son todo lo contrario a la aleatoriedad.
-    Y bueno, aleatorio no es lo mismo que al azar.`,
-    //image: "fotos/patron_racing.jpg",
-    tags: ["estadística"],
-    color: "yellow",
-    comments: [
-      // { author: "Victoria", date: "2026-05-20T10:00:00", body: "PD: hablo de cualquier cosa." }
-    ]
-  },
-//   {
-//     id: 2,
-//     title: "Primeros pasos con pandas y numpy",
-//     date: "2025-03-18T14:30:00",
-//     body: "Hoy estuve explorando datasets de clima con pandas. Lo más útil fue aprender a usar groupby y apply para resumir datos meteorológicos por estación. Les comparto el flujo básico que usé...",
-//     tags: ["ciencia de datos", "python"],
-//     color: "lblue",
-//     comments: []
-//   },
-//   {
-//     id: 3,
-//     title: "Vacaciones en la Patagonia",
-//     date: "2025-04-02T08:00:00",
-//     body: "Estuvimos una semana recorriendo la Patagonia. El Nahuel Huapi fue una locura, el agua de un azul increíble. Hicimos trekking en el Cerro López y el Refugio Lynch. Imposible no desconectarse.",
-//     tags: ["vacaciones", "viajes"],
-//     color: "green",
-//     comments: [
-//       { author: "Martín", date: "2025-04-05T17:00:00", body: "¡Qué envidia! ¿Qué sendero recomendás más?" },
-//       { author: "Yo",     date: "2025-04-05T19:00:00", body: "El del Cerro López es imperdible, aunque es bastante exigente. ¡Vale la pena cada paso!" }
-//     ]
-//   },
-//   {
-//     id: 4,
-//     title: "Redes neuronales desde cero",
-//     date: "2025-05-01T11:00:00",
-//     body: "Implementé una red neuronal simple con numpy puro, sin usar PyTorch ni TensorFlow. El objetivo era entender el backpropagation desde adentro. La parte más interesante fue entender cómo fluyen los gradientes.",
-//     tags: ["machine learning", "python"],
-//     color: "purple",
-//     comments: []
-//   }
-];
-/* ══════════════════════════════════════════ */
-
-let activeFilter = "todos";
 
 function escHtml(str) {
   return String(str)
@@ -290,8 +705,37 @@ function escHtml(str) {
     .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
+// Renderiza body: primero escapa HTML, luego restaura $...$ para MathJax
+function renderBody(text) {
+  // Separar bloques LaTeX para no escaparlos
+  const parts = [];
+  let remaining = text;
+  // Reemplazar $$...$$ y $...$ con placeholders
+  const latexBlocks = [];
+  remaining = remaining.replace(/\$\$([\s\S]+?)\$\$/g, (m) => {
+    latexBlocks.push(m); return `\x00LATEX${latexBlocks.length-1}\x00`;
+  });
+  remaining = remaining.replace(/\$([^\$\n]+?)\$/g, (m) => {
+    latexBlocks.push(m); return `\x00LATEX${latexBlocks.length-1}\x00`;
+  });
+  // Escapar HTML y convertir saltos
+  let html = escHtml(remaining).replace(/\n/g, '<br>');
+  // Restaurar LaTeX sin escapar
+  html = html.replace(/\x00LATEX(\d+)\x00/g, (_, i) => latexBlocks[+i]);
+  return html;
+}
+
+function renderAll() {
+  renderFilterBar();
+  renderPosts();
+  // Pedirle a MathJax que procese el nuevo contenido
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([document.getElementById('postsContainer')]).catch(()=>{});
+  }
+}
+
 function renderFilterBar() {
-  const bar = document.getElementById("filterBar");
+  const bar = document.getElementById('filterBar');
   const allTags = new Set();
   posts.forEach(p => p.tags.forEach(t => allTags.add(t.toLowerCase().trim())));
 
@@ -310,10 +754,10 @@ function renderFilterBar() {
 }
 
 function renderPosts() {
-  const container = document.getElementById("postsContainer");
-  const filtered = activeFilter === "todos"
+  const container = document.getElementById('postsContainer');
+  const filtered  = activeFilter === 'todos'
     ? posts
-    : posts.filter(p => p.tags.map(t => t.toLowerCase().trim()).includes(activeFilter));
+    : posts.filter(p => p.tags.map(t=>t.toLowerCase().trim()).includes(activeFilter));
 
   if (filtered.length === 0) {
     container.innerHTML = `<p style="color:#666;font-style:italic">No hay entradas con ese tag.</p>`;
@@ -324,7 +768,7 @@ function renderPosts() {
     const tagsHtml = post.tags.map(t => {
       const c = getTagColor(t);
       return `<span class="tag tag-${c}">${escHtml(t)}</span>`;
-    }).join("");
+    }).join('');
 
     const commentsHtml = post.comments.length
       ? `<div class="comments">${post.comments.map(c => `
@@ -333,10 +777,20 @@ function renderPosts() {
               <span class="comment-author">${escHtml(c.author)}</span>
               <span class="comment-date"> · ${fmtDate(c.date)}</span>
             </div>
-            <div class="comment-body">${escHtml(c.body)}</div>
-          </div>`).join("")}
+            <div class="comment-body">${renderBody(c.body)}</div>
+          </div>`).join('')}
         </div>`
-      : "";
+      : '';
+
+    const adminActions = isAdmin ? `
+      <div class="admin-post-actions visible">
+        <span onclick="toggleCommentForm(${post.id})">+ comentario</span>
+      </div>
+      <div class="add-comment-form" id="cf-${post.id}">
+        <input type="text"  id="ca-${post.id}" placeholder="Tu nombre (ej: Vicky)">
+        <textarea           id="cb-${post.id}" placeholder="Comentario..."></textarea>
+        <button onclick="submitComment(${post.id})">Guardar comentario</button>
+      </div>` : '';
 
     return `
     <div class="post color-${post.color}" id="post-${post.id}">
@@ -347,21 +801,53 @@ function renderPosts() {
         </div>
         <div class="post-tags">${tagsHtml}</div>
       </div>
-      <div class="post-body">${escHtml(post.body).replace(/\n/g, '<br>')}</div>
-      ${post.image ? `<img src="${post.image}" style="margin-top:1rem; max-width:100%; border-radius:4px;">` : ""}
+      <div class="post-body">${renderBody(post.body)}</div>
+      ${post.image ? `<img src="${post.image}" class="post-image" alt="">` : ''}
       ${commentsHtml}
+      ${adminActions}
     </div>`;
-  }).join("");
+  }).join('');
 }
 
 function filterPosts(tag) {
   activeFilter = tag;
-  renderFilterBar();
-  renderPosts();
+  renderAll();
 }
 
-renderFilterBar();
-renderPosts();
+/* ══════════════════════════════════════════════
+   UI HELPERS
+══════════════════════════════════════════════ */
+function setSaving(on) {
+  document.getElementById('savingMsg').style.display = on ? 'inline' : 'none';
+  document.querySelectorAll('.new-post-form button[type=submit]').forEach(b => b.disabled = on);
+}
+
+let statusTimer;
+function showStatus(msg, isError) {
+  const bar = document.getElementById('statusBar');
+  bar.textContent = msg;
+  bar.style.background = isError ? '#cc0000' : '#333';
+  bar.classList.add('show');
+  clearTimeout(statusTimer);
+  statusTimer = setTimeout(() => bar.classList.remove('show'), 3500);
+}
+
+function readFileAsDataUrl(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload  = () => res(r.result);
+    r.onerror = () => rej(new Error('No se pudo leer el archivo.'));
+    r.readAsDataURL(file);
+  });
+}
+
+/* ══════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════ */
+// Si ya había un token guardado, activar modo admin automáticamente
+if (getToken()) setAdminMode(true);
+
+loadPosts();
 </script>
 </body>
 </html>
