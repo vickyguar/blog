@@ -1,2 +1,14 @@
 [
+  {
+    "id": 1779466024022,
+    "title": "Series de Taylor (análisis complejo)",
+    "body": "Acabo de publicar un repositorio en GitHub con el código de las visualizaciones que hice de series de Taylor para variable compleja usando técnicas de *domain coloring*. Las hice para para mostrarles a los chicos de Cálculo III (Cálculo complejo), así tenían una mejor idea de cómo convergen las aproximaciones en serie de potencias. Y la verdad es que me sirvió bastante a mí también. Igual hay que tener en cuenta que el dominio coloreado solo me habla del argumento y no del módulo.\n\nDejo la animación para $f(z) = \\frac{1}{1-z}$, con el desarrollo centrado en $z_0=0$, que se realiza usando la serie geométrica, converge para el disco $|z|<1$.\n\nEl link al repo es este: **https://github.com/vickyguar/Taylor**\n\nAh, y este es mi primer posteo a este blog :) no creo que sea constante con esto pero me divirtió programarlo jaja...",
+    "date": "2026-05-22T16:07:04.022Z",
+    "tags": [
+      "matemática"
+    ],
+    "color": "yellow",
+    "image": "fotos/1779466019956_geom.gif",
+    "comments": []
+  }
 ]
