@@ -12,7 +12,7 @@
     "comments": [
       {
         "author": "Victoria",
-        "body": "Ah, btw:\n\n**Teorema.** Supongamos que una función $f$ es analítica en todo un disco $|z-z_0|<R$, centrado en $z_0$ con radio $R$. Entonces $f(z)$ tiene la representación en serie de potencias\n\n$$\nf(z) = \\sum_{n=0}^{\\infty} a_n (z-z_0)^n, \\quad |z-z_0| \\lt R, \\qquad (1)\n$$\n\ndonde\n\n$$\na_n = \\frac{f^{(n)}(z_0)}{n!}, \\quad n=0,1,2,\\cdots \\qquad (2)\n$$\n\nEs decir, la serie $(1)$ converge a $f(z)$ cuando $z$ se encuentra en el disco abierto indicado.",
+        "body": "Ah, btw:\n\n**Teorema.** Supongamos que una función $f$ es analítica en todo un disco $|z-z_0| \\lt R$, centrado en $z_0$ con radio $R$. Entonces $f(z)$ tiene la representación en serie de potencias\n\n$$\nf(z) = \\sum_{n=0}^{\\infty} a_n (z-z_0)^n, \\quad |z-z_0| \\lt R, \\qquad (1)\n$$\n\ndonde\n\n$$\na_n = \\frac{f^{(n)}(z_0)}{n!}, \\quad n=0,1,2,\\cdots \\qquad (2)\n$$\n\nEs decir, la serie $(1)$ converge a $f(z)$ cuando $z$ se encuentra en el disco abierto indicado.",
         "date": "2026-05-22T16:09:50.748Z"
       }
     ]
